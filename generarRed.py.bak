@@ -1,0 +1,61 @@
+#!/usr/bin/python3
+import networkx as nx
+MiGrafo = nx.DiGraph()
+
+
+cardinalidad_pickle        = 'diccionario_cardinalidad.p'
+union_pickle               = 'diccionario_union.p'
+terminos_economicos_pickle = 'lista_terminos_economicos.p'
+
+
+umbral = 0.95
+con_prob1 = True
+arcos = 'arcos_umbral{}_prob1_{}.csv'.format(str(umbral),str(con_prob1))
+arcos_writer = open(arcos,'w',encoding='utf-8')
+arcos_writer.write('source,target,weight\n')
+
+vertices = 'vertices_umbral{}_prob1_{}.csv'.format(str(umbral),str(con_prob1))
+vertices_writer = open(vertices,'w',encoding='utf-8')
+vertices_writer.write('id,label\n')
+
+import pickle
+def load(file):
+	return pickle.load(open(file,'rb'))
+def dump(file):
+	pickle.dump(open(file,'wb'))
+
+cardinalidad        = load(cardinalidad_pickle)
+union               = load(union_pickle)
+terminos_economicos = load(terminos_economicos_pickle)
+vertices_agregados = set()
+
+
+def agregar_vertice(index):
+	if not index in vertices_agregados:
+		label = " ".join(terminos_economicos[index])
+		vertices_writer.write("{},{}\n".format(index,label))
+		vertices_agregados.add(index)
+
+# Construimos arcos
+for row in range(0,len(terminos_economicos)-1):
+	for column in range(row+1,len(terminos_economicos)):
+		index1 = row
+		index2 = column
+
+		term1  = tuple(terminos_economicos[index1])
+		term2  = tuple(terminos_economicos[index2])
+
+		val1   = union[(index1,index2)]/cardinalidad[index1] # T1 -> T2
+		val2   = union[(index1,index2)]/cardinalidad[index2] # T2 -> T1
+
+		if max(val1,val2)>0.8  and ((max(val1,val2)!=1.0) or con_prob1)  and cardinalidad[index1]>1 and cardinalidad[index2]>1:
+			agregar_vertice(index1)
+			agregar_vertice(index2)
+			if val1>val2:
+				print('{} --> {}: {}  ({}/{})'.format(term1,term2,val1,union[(index1,index2)],cardinalidad[index1]))
+				arcos_writer.write('{},{},{}\n'.format(index1,index2,val1))
+			else:
+				print('{} --> {}: {}  ({}/{})'.format(term2,term1,val2,union[(index1,index2)],cardinalidad[index2]))
+				arcos_writer.write('{},{},{}\n'.format(index2,index1,val2))
+vertices_writer.close()
+arcos_writer.close()

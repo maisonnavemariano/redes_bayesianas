@@ -1,0 +1,228 @@
+id,label
+3,aid
+106,endogenous
+154,gni
+195,international aid
+223,liquidity trap
+382,tangible assets
+5,amortisation
+82,depreciation
+10,asian crisis
+245,money
+11,assets
+193,intangible assets
+14,average
+91,disinflation
+152,gini coefficient
+174,hyper-inflation
+215,leading indicators
+292,producer prices
+339,risk premium
+405,treasury bills
+15,balanced budget
+27,budget
+159,government
+16,bank
+23,bonds
+34,capital controls
+35,capital flight
+38,capital markets
+43,central bank
+45,chicago school
+49,command economy
+61,contagion
+68,credit creation
+69,credit crunch
+72,current account
+77,deflation
+81,deposit insurance
+85,derivatives
+96,ecb
+101,effective exchange rate
+115,euro zone
+116,european central bank
+124,export credit
+128,fdi
+130,financial instrument
+131,financial intermediary
+132,financial markets
+151,gilts
+160,government bonds
+186,inflation target
+194,intellectual capital
+220,libor
+222,liquidity
+244,monetary policy
+247,money markets
+248,money supply
+256,nationalisation
+265,opec
+316,reflation
+324,rent-seeking
+327,repo
+340,risk seeking
+346,seasonally adjusted
+347,secondary market
+357,shorting
+364,spot price
+381,systemic risk
+403,transmission mechanism
+421,wealth effect
+428,world bank
+431,yield curve
+432,yield gap
+20,behavioural economics
+100,economics
+26,bubble
+155,gnp
+158,golden rule
+210,laffer curve
+29,business confidence
+166,growth
+32,capacity
+175,hypothecation
+33,capital
+136,fiscal drag
+172,human capital
+209,labour market flexibility
+230,market capitalisation
+359,social capital
+416,venture capital
+39,capital structure
+354,shares
+40,capitalism
+71,crony capitalism
+67,credit
+187,information
+284,price
+314,recession
+122,expectations
+185,inflation
+207,labour
+221,life
+235,mean
+363,speculation
+52,comparative advantage
+53,competition
+387,tax competition
+55,competitiveness
+57,conditionality
+58,consumer confidence
+59,consumer prices
+64,corruption
+206,kleptocracy
+65,cost-benefit analysis
+73,debt
+171,house prices
+200,investment
+228,manufacturing
+377,supply
+395,trade
+410,unemployment
+98,economic indicator
+161,government debt
+227,macroeconomics
+254,national debt
+330,reserve currency
+75,default
+76,deficit
+165,gross national product
+78,demand
+79,demand curve
+183,inelastic
+224,lock-in
+312,real exchange rate
+374,structural unemployment
+425,windfall gains
+192,insurance
+88,diminishing returns
+334,returns
+89,direct taxation
+390,taxation
+114,euro
+125,exports
+149,gdp
+177,imf
+269,output
+336,risk
+93,dividend
+325,replacement cost
+97,econometrics
+270,output gap
+120,exchange rate
+343,savings
+113,equity
+289,private equity
+123,expenditure tax
+127,fair trade
+141,foreign direct investment
+134,firms
+137,fiscal policy
+139,flotation
+144,free trade
+184,inequality
+162,government expenditure
+163,government revenue
+167,hard currency
+180,income tax
+181,indexation
+182,indirect taxation
+201,invisible hand
+205,keynesian
+212,laissez-faire
+214,land tax
+231,market failure
+239,mixed economy
+251,multiplier
+252,nafta
+253,nation building
+255,national income
+266,opportunity cost
+276,percentile
+282,ppp
+290,privatisation
+297,progressive taxation
+301,public spending
+310,rationality
+313,real terms
+317,regional policy
+318,regressive tax
+321,regulatory capture
+360,social market
+362,sovereign risk
+375,subsidy
+386,tax burden
+399,transaction costs
+422,wealth tax
+423,welfare
+427,withholding tax
+164,gross domestic product
+170,hot money
+226,macroeconomic policy
+274,overshooting
+287,price regulation
+304,purchasing power parity
+345,scenario analysis
+379,sustainable growth
+352,services
+420,wages
+176,ilo
+179,income
+278,phillips curve
+188,infrastructure
+294,profit
+196,international labour organisation
+198,international trade
+202,inward investment
+407,trust
+394,total return
+417,vertical integration
+319,regulation
+302,public utility
+413,utility
+408,uncertainty
+322,regulatory risk
+388,tax efficient
+429,world trade organisation
+397,trade unions
+411,unions
