@@ -51,4 +51,26 @@ for row in range(0,len(terminos_economicos)-1):
 				print('{} --> {}: {}  ({}/{})'.format(term2,term1,val2,union[(index1,index2)],cardinalidad[index2]))
 				MiGrafo.add_edge(index2,index1,weight=val2)
 
+
+def graf2csv(MiGrafo):
+	arcos_file      = 'arcos.csv'
+	vertices_file   = 'vertices.csv'
+	writer_vertices = open(vertices_file,'w',encoding='utf-8')
+	writer_arcos    = open(arcos_file,   'w',encoding='utf-8')
+	writer_vertices.write('id,label\n')
+	writer_arcos.write('source,target,weight\n')
+
+	for vertex_id in MiGrafo.nodes():
+		label = MiGrafo.node[vertex_id]['label']
+		writer_vertices.write('{},{}\n'.format(vertex_id,label))
+
+	for source in MiGrafo.edge:
+		for target in MiGrafo[source]:
+			weight = MiGrafo[source][target]['weight']
+			writer_arcos.write('{},{},{}\n'.format(source,target,weight))
+
+	writer_vertices.close()
+	writer_arcos.close()
+
+graf2csv(MiGrafo)
 dump(MiGrafo,'MiGrafo.p')
