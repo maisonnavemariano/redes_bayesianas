@@ -6,7 +6,7 @@ MiGrafo = nx.DiGraph()
 cardinalidad_pickle        = 'diccionario_cardinalidad.p'
 union_pickle               = 'diccionario_union.p'
 terminos_economicos_pickle = 'lista_terminos_economicos.p'
-
+noticias_econ_pickle       = 'noticia_term_econ.p'
 
 umbral = 0.95
 con_prob1 = True
@@ -20,6 +20,7 @@ def dump(obj, file):
 cardinalidad        = load(cardinalidad_pickle)
 union               = load(union_pickle)
 terminos_economicos = load(terminos_economicos_pickle)
+noticias            = load(noticias_econ_pickle)
 vertices_agregados = set()
 
 
@@ -52,9 +53,9 @@ for row in range(0,len(terminos_economicos)-1):
 				MiGrafo.add_edge(index2,index1,weight=val2)
 
 
-def graf2csv(MiGrafo):
-	arcos_file      = 'arcos.csv'
-	vertices_file   = 'vertices.csv'
+def graf2csv(MiGrafo,file):
+	arcos_file      = file+'_arcos.csv'
+	vertices_file   = file+'_vertices.csv'
 	writer_vertices = open(vertices_file,'w',encoding='utf-8')
 	writer_arcos    = open(arcos_file,   'w',encoding='utf-8')
 	writer_vertices.write('id,label\n')
@@ -72,5 +73,44 @@ def graf2csv(MiGrafo):
 	writer_vertices.close()
 	writer_arcos.close()
 
-graf2csv(MiGrafo)
+graf2csv(MiGrafo,'grafo_umbral{}_conprob1_{}'.format(umbral,con_prob1))
 dump(MiGrafo,'MiGrafo.p')
+
+
+# Weights
+termIndex2rank = nx.pagerank(MiGrafo)
+term_index     = [tuple(term) for term in terminos_economicos]
+inverse_index  = dict([(term,index) for (index,term) in enumerate(term_index)])
+
+
+indexNoticia2rank = {}
+
+index = 0
+for noticia in noticias:
+	indexNoticia = 'id: {}'.format(str(noticia[0]))
+	MiGrafo.add_node(indexNoticia, label=indexNoticia)
+	for termino_economico in noticia[4]:
+		index_term = inverse_index[tuple(termino_economico)]
+		if index_term in termIndex2rank:
+			peso       = termIndex2rank[index_term]
+			MiGrafo.add_edge(indexNoticia,index_term,weight=peso)
+	if index == 1:
+		graf2csv(MiGrafo,'prueba')
+	index+=1
+
+for noticia in noticias:
+	indexNoticia = 'id: {}'.format(str(noticia[0]))
+	pesoNoticia  = 0
+	for indexTerm in MiGrafo.edge[indexNoticia]:
+		peso = MiGrafo.edge[indexNoticia][indexTerm]['weight']
+		pesoNoticia += peso
+	indexNoticia2rank[indexNoticia] = pesoNoticia
+
+lista_aux = [(indexNoticia2rank[nodo],nodo) for nodo in indexNoticia2rank]
+
+noticias = [(id,fecha,titulo,texto,lista,indexNoticia2rank['id: {}'.format(str(id))]) for (id,fecha,titulo,texto,lista) in noticias]
+for elem in sorted(noticias,key=lambda x: x[5], reverse=False):
+	print("{},{}".format(elem[2],elem[5]))
+
+dump(noticias,'noticias_y_relevancia.p')
+dump(MiGrafo,'MiGrafo2.p')
