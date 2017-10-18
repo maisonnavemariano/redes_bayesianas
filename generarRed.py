@@ -85,18 +85,14 @@ inverse_index  = dict([(term,index) for (index,term) in enumerate(term_index)])
 
 indexNoticia2rank = {}
 
-index = 0
 for noticia in noticias:
 	indexNoticia = 'id: {}'.format(str(noticia[0]))
 	MiGrafo.add_node(indexNoticia, label=indexNoticia)
-	for termino_economico in noticia[4]:
+	for termino_economico in noticia[5]:
 		index_term = inverse_index[tuple(termino_economico)]
 		if index_term in termIndex2rank:
-			peso       = termIndex2rank[index_term]
+			peso       = 1 #termIndex2rank[index_term]
 			MiGrafo.add_edge(indexNoticia,index_term,weight=peso)
-	if index == 1:
-		graf2csv(MiGrafo,'prueba')
-	index+=1
 
 for noticia in noticias:
 	indexNoticia = 'id: {}'.format(str(noticia[0]))
@@ -108,7 +104,7 @@ for noticia in noticias:
 
 lista_aux = [(indexNoticia2rank[nodo],nodo) for nodo in indexNoticia2rank]
 
-noticias = [(id,fecha,titulo,texto,lista,indexNoticia2rank['id: {}'.format(str(id))]) for (id,fecha,titulo,texto,lista) in noticias]
+noticias = [(id,fecha,titulo,texto,seccion,lista,indexNoticia2rank['id: {}'.format(str(id))]) for (id,fecha,titulo,texto,seccion,lista) in noticias]
 for elem in sorted(noticias,key=lambda x: x[5], reverse=False):
 	print("{},{}".format(elem[2],elem[5]))
 

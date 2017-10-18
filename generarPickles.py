@@ -2,8 +2,8 @@
 import time
 start = time.time()
 # ========= END_TIME =========
-INPUT = '../../dataset/noticias2013_reducido'
-INPUT_TERMINOS_ECONOMICOS = '../../dataset/terminos_economicos_the_economist.txt'
+INPUT = '../db/noticias2013_reducido'
+INPUT_TERMINOS_ECONOMICOS = '../db/terminos_economicos_the_economist.txt'
 
 #OUT
 pickle_lista_noticias_term_econ = 'noticia_term_econ.p'
@@ -33,25 +33,31 @@ def clean_html(texto):
 
 stopwords_list = []
 from nltk.corpus import stopwords
-stop_words_file = '../../dataset/stopwords.txt'
-print('[INFO] Leemos corpus de stopwords de nltk y del archivo {}'.format(stop_words_file))
+
 stopwords_list = stopwords.words('english')
-stopwords_list += open(stop_words_file,'r',encoding='utf-8').read().splitlines()
-stopwords_list = list(set(stopwords_list))
+print('[INFO] Leemos corpus de stopwords de nltk.')
+try:
+	stop_words_file = '../../dataset/stopwords.txt'
+	print('[OK] Intentamos leer corpus de stopwords del archivo {}'.format(stop_words_file))
+	stopwords_list += open(stop_words_file,'r',encoding='utf-8').read().splitlines()
+	stopwords_list = list(set(stopwords_list))
+except:
+	print('[WARNING] No se encontro archivo de stopwords: {}'.format(stop_words_file))
 
 def filter_stopwords(lista_palabras):
 	return [palabra for palabra in lista_palabras if not palabra in stopwords_list]
 
 print('[OK] Definimos un filtro de noticias que: transforma enteros en enteros, elimina html de titulo y cuerpo, tokeniza tanto titulo como cuerpo y le elimina las stopwords')
 def filter_new(noticia):
-	id     = int(noticia[0])
-	fecha  = noticia[1]
-	titulo = clean_html(noticia[2])
-	texto  = clean_html(noticia[3])
+	id      = int(noticia[0])
+	fecha   = noticia[1]
+	titulo  = clean_html(noticia[2])
+	texto   = clean_html(noticia[3])
+	seccion = noticia[4]
 	lista_palabras = word_tokenize(titulo) + word_tokenize(texto)
 	lista_palabras = [palabra.lower() for palabra in lista_palabras]
 	lista_palabras = filter_stopwords(lista_palabras)
-	return (id,fecha,titulo,texto,lista_palabras)
+	return (id,fecha,titulo,texto,seccion,lista_palabras)
 # ========= END_FILTER_FUNCTIONS =========
 print('========================== PASO 1 ==========================')
 print('[OK] Primero leemos las noticias del año 2013 de The Guardian.')
@@ -64,12 +70,13 @@ except:
 	lines = open(INPUT,'r',encoding='utf-8').read().splitlines()
 	def get_feature(lines,feature):
 		return [line[len(feature):] for line in lines if line.startswith(feature)]
-	titulos      = get_feature(lines, 'webTitle: ')
-	textos       = get_feature(lines, 'bodytext: ')
-	fechas       = get_feature(lines, 'webPublicationDate: ')
-	instance_nro = get_feature(lines, 'instanceNro: ')
+	titulos       = get_feature(lines, 'webTitle: ')
+	textos        = get_feature(lines, 'bodytext: ')
+	fechas        = get_feature(lines, 'webPublicationDate: ')
+	instance_nro  = get_feature(lines, 'instanceNro: ')
+	seccion_names = get_feature(lines, 'sectionName: ')
 	print('[OK] Archivo leído.')
-	noticias = list(zip(instance_nro,fechas,titulos,textos))
+	noticias = list(zip(instance_nro,fechas,titulos,textos,seccion_names))
 	#FILTER
 	print('[OK] Comenzamos filtrado y construcción de un única lista de palabras por noticia (word_tokenize,clean_html, filtrado de stopwords).')
 	noticias = [filter_new(noticia) for noticia in noticias]
@@ -91,7 +98,7 @@ except:
 	terminos_economicos = [termino.lower().split(' ') for termino in terminos_economicos]
 
 	def exist_in_corpus(termino):
-		return any(list_in_list(termino,noticia[4]) for noticia in noticias)
+		return any(list_in_list(termino,noticia[5]) for noticia in noticias)
 	print('[OK] Filtramos términos economicos que no aparecen en el corpus de noticias.')
 	terminos_economicos = [termino for termino in terminos_economicos if exist_in_corpus(termino)]
 	print('[OK] Generamos el picke de términos económicos.')
@@ -139,7 +146,7 @@ try:
 	print('[OK] Pickle leído correctamente.')
 except:
 	print('[WARNING] Pickle no encontrado, filtramos las noticias que ya teníamos para eliminar todas palabras no económicas de la lista de palabras.')
-	noticias = [(id,fecha,titulo,texto,filter_non_economic(lista_palabras) ) for (id,fecha,titulo,texto,lista_palabras) in noticias]
+	noticias = [(id,fecha,titulo,texto,seccion,filter_non_economic(lista_palabras) ) for (id,fecha,titulo,texto,seccion,lista_palabras) in noticias]
 	print('[OK] Generamos pickle de noticias con palabras no económicas fitlradas (archivo: {}).'.format(pickle_lista_noticias_term_econ))
 	pickle.dump(noticias,open(pickle_lista_noticias_term_econ,'wb'))
 	print('[OK] Pickle generado correctamente.')
